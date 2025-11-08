@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  ip-rule-Generate:
+  AGS-Hosts-Generate:
     runs-on: ubuntu-latest
 
     steps:
@@ -20,7 +20,7 @@ jobs:
         run: |
           sudo apt install -y curl wget sed git
 
-      - name: Download Json
+      - name: Download Yml
         run: |
           echo 'payload:' > GetAdobeHosts.yml
           curl -fsSL -A 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:144.0) Gecko/20100101 Firefox/144.0' 'https://a.dove.isdumb.one/list.txt'| grep 0.0.0.0 | sed 's/0.0.0.0 /  - /g' >> GetAdobeHosts.yml
