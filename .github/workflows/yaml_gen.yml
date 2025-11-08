@@ -1,0 +1,49 @@
+name: Mihomo AGS Hosts rule
+
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  ip-rule-Generate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install Necessary Tools
+        run: |
+          sudo apt install -y curl wget sed git
+
+      - name: Download Json
+        run: |
+          echo 'payload:' > GetAdobeHosts.yml
+          curl -fsSL -A 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:144.0) Gecko/20100101 Firefox/144.0' 'https://a.dove.isdumb.one/list.txt'| grep 0.0.0.0 | sed 's/0.0.0.0 /  - /g' >> GetAdobeHosts.yml
+
+      - name: Configure Git User
+        run: |
+          git config --global user.name 'github-actions'
+          git config --global user.email 'github-actions@github.com'
+
+      - name: Prepare Data Folder
+        run: |
+          sudo mkdir -p data
+          sudo mv -f GetAdobeHosts.yml data
+          sudo chown -R $USER:$USER data
+          sudo chmod -R 755 data
+
+      - name: Push Files
+        run: |
+          echo "Force updating repository with local content. . ."
+          git checkout -b Release
+          sudo git add data
+          git commit -m "Update Adobe hosts data"
+          git push --force origin Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        continue-on-error: true
