@@ -25,6 +25,10 @@ jobs:
           echo 'payload:' > GetAdobeHosts.yml
           curl -fsSL -A 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:144.0) Gecko/20100101 Firefox/144.0' 'https://a.dove.isdumb.one/list.txt'| grep 0.0.0.0 | sed 's/0.0.0.0 /  - DOMAIN,/g' >> GetAdobeHosts.yml
 
+      - name: Convert to mrs
+        run: |
+          mihomo convert-ruleset domain yaml GetAdobeHosts.yml GetAdobeHosts.mrs
+
       - name: Configure Git User
         run: |
           git config --global user.name 'github-actions'
@@ -34,6 +38,7 @@ jobs:
         run: |
           sudo mkdir -p data
           sudo mv -f GetAdobeHosts.yml data
+          sudo mv -f GetAdobeHosts.mrs data
           sudo chown -R $USER:$USER data
           sudo chmod -R 755 data
 
