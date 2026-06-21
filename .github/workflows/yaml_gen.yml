@@ -20,6 +20,12 @@ jobs:
         run: |
           sudo apt install -y curl wget sed git
 
+      - name: Install Mihomo Core
+        run: |
+          wget -q https://github.com/MetaCubeX/mihomo/releases/download/v1.19.27/mihomo-linux-amd64-v2-v1.19.27.deb
+          sudo dpkg -i mihomo-linux-amd64-v2-v1.19.27.deb
+          sudo rm -f mihomo-linux-amd64-v2-v1.19.27.deb
+
       - name: Download Yml
         run: |
           echo 'payload:' > GetAdobeHosts.yml
